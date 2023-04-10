@@ -1,0 +1,74 @@
+#include<iostream>
+#include<string>
+#include<cmath>
+#include<stack>
+#include<vector>
+using namespace std;
+string oz(string s) {
+	int v = 0;
+	for (int i = 0; i < s.length(); i++) {
+		if (s[i] != '0')break;
+		v = i+1;
+	}
+	return s.substr(v);
+}
+string rev(string s) {
+	string ret = s;
+	for (int i = 0; i < s.length(); i++) {
+		ret[i] = s[s.length() - 1 - i];
+	}
+	return ret;
+}
+string summ(string a,string b) {
+	string su = "";
+	int c = 0, ac, bc;
+	int min = (a.length() > b.length()) ? a.length() : b.length();
+	for (int i = min-1; i >=0; i--) {
+		if (a.length() > i)ac = a[i] - 48;
+		else ac = 0;
+		if (b.length() > i)bc = b[i] - 48;
+		else bc = 0;
+		su += ((ac + bc+c) % 10) + 48;
+		c = (ac + bc+c) / 10;
+	}
+	su += c + 48;
+	return rev(su);
+}
+string mul(string a, string b) {
+	string prod = "", sum = "";
+	int c, d, cu = 0, mul;
+	for (int i = a.length() - 1; i >= 0; i--) {
+		sum = "";
+		cu = 0;
+		for (int j = b.length() - 1; j >= 0; j--) {
+			c = a[i] - 48;
+			d = b[j] - 48;
+			mul = (c * d) + cu;
+			sum += (mul % 10) + 48;
+			cu = mul / 10;
+		}
+		sum += cu + 48;
+		sum = rev(sum);
+		//sum = oz(sum);
+		string zero = "";
+		for (int j = 1; j < a.length()-i; j++)zero += '0';
+		prod = summ(sum + zero, prod);
+		//prod = oz(prod);
+	}
+
+	return prod;
+}
+int main() {
+	int m;
+	string inp, prod;
+	cin >> m;
+	cin >> inp;
+	prod = inp;
+	for (int i = 1; i < m; i++) {
+		cin >> inp;
+		prod = mul(prod,inp);
+		prod = oz(prod);
+	}
+	if (prod == "")cout << 0;
+	cout << prod<<endl;
+}
